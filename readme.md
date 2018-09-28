@@ -1,20 +1,24 @@
 ## 前言
 
-因为作者在 0.9.4 之后选择对所有的安装包收费，不再提供安装包下载，但是源码依旧公开，于是本人选择了自己编译的 Windows 版本的道路，同时无偿提供给大家。
+因为作者在 0.9.4 版本之后选择对所有的安装包收费，不再提供安装包下载，但是源码依旧公开。
+
+但是网络上关于 Redis Desktop Manager 的编译教程都是 Linux 下的，没有任何参考价值。而官方文档提供的步骤只有寥寥几个字，没有任何可操作性。本人摸索了几个小时，终于摸清编译打包的完整流程。
+
+如果下面的教程对你有所帮助，你也可以选择打赏。
+
+<div align="center"><img width="300" height="300" src="images/alipay.png"><img width="300" height="300" src="images/wechatpay.png"></div>
 
 ## 编译过程
-
-网络上 关于 Redis Desktop Manager 的编译教程都是 Linux 下的，没有任何参考价值。而官方文档提供的步骤过于简洁，以至于根本无法操作。本人摸索了几个小时，终于完整编译并打包。具体操作如下：
 
 ### 安装工具
 
 #### 安装 VSCode 2015
 
-到 [http://blog.postcha.com/read/66](http://blog.postcha.com/read/66) 下载 VSCode 专业版，自定义安装，一定要勾选 VC ++，然后一直下一步，大约两个小时装完。
+到 [http://blog.postcha.com/read/66](http://blog.postcha.com/read/66) 下载 VSCode 专业版，自定义安装，一定要勾选 VC ++，然后一直下一步，视机器配置而定，一般大约一个半小时装完。
 
 #### 安装 Qt 5.9
 
-到 [http://mirrors.ustc.edu.cn/qtproject/archive/qt/5.9/](http://mirrors.ustc.edu.cn/qtproject/archive/qt/5.9/) 下载最新到 Qt 5.9 版本，一直下一步就行
+到 [http://mirrors.ustc.edu.cn/qtproject/archive/qt/5.9/](http://mirrors.ustc.edu.cn/qtproject/archive/qt/5.9/) 下载最新到 Qt 5.9 版本，一直下一步就行，大约半个小时左右。
 
 #### 安装 CMake
 
@@ -26,11 +30,11 @@
 
 #### 安装 Python 2
 
-右键解压，不要安装，因为我用到 Python 3，不想冲突
+到 https://www.python.org/downloads/ 下载安装 Python 2.7
 
 #### 安装 OpenSSL
 
-下载并安装 [Win 32 OpenSSL 1.0.x](https://slproweb.com/products/Win32OpenSSL.html) 
+下载并安装 [Win 32 OpenSSL 1.0.x](https://slproweb.com/products/Win32OpenSSL.html) 版本
 
 ### 编译 Redis Desktop Manager
 
@@ -39,9 +43,8 @@
 #### 获取源码
 
 ```powershell
-git clone -q --depth=5 --branch=0.9 https://github.com/uglide/RedisDesktopManager.git D:\redisdesktopmanager
+git clone --recursive https://github.com/uglide/RedisDesktopManager.git D:\redisdesktopmanager
 cd D:\redisdesktopmanager
-git submodule update --init --recursive
 ```
 
 #### 编译 libssh2
@@ -58,9 +61,9 @@ cmake --build build --config "Release"
 
 ```powershell
 cd D:\redisdesktopmanager
-set APPVEYOR_BUILD_VERSION=0.9.4.1055
-"D:\Program Files\Python\python27\python.exe" ./build/utils/set_version.py %APPVEYOR_BUILD_VERSION% > ./src/version.h
-"D:\Program Files\Python\python27\python.exe" ./build/utils/set_version.py %APPVEYOR_BUILD_VERSION% > ./3rdparty/crashreporter/src/version.h
+set VERSION=0.9.4.1055
+"D:\Program Files\Python\python27\python.exe" ./build/utils/set_version.py %VERSION% > ./src/version.h
+"D:\Program Files\Python\python27\python.exe" ./build/utils/set_version.py %VERSION% > ./3rdparty/crashreporter/src/version.h
 ```
 
 #### 编译 crashreporter
@@ -68,7 +71,7 @@ set APPVEYOR_BUILD_VERSION=0.9.4.1055
 ```powershell
 cd ./3rdparty/crashreporter
 "D:\Qt\Qt5.9.6\5.9.6\msvc2015\bin\qmake.exe" CONFIG+=release DESTDIR=D:\redisdesktopmanager\bin\windows\release
-powershell -Command "(Get-Content Makefile.Release).replace('DEFINES       =','DEFINES       = -DAPP_NAME=\\\"RedisDesktopManager\\\" -DAPP_VERSION=\\\""%APPVEYOR_BUILD_VERSION%"\\\" -DCRASH_SERVER_URL=\\\"https://oops.redisdesktop.com/crash-report\\\"')" > Makefile.Release2
+powershell -Command "(Get-Content Makefile.Release).replace('DEFINES       =','DEFINES       = -DAPP_NAME=\\\"RedisDesktopManager\\\" -DAPP_VERSION=\\\""%VERSION%"\\\" -DCRASH_SERVER_URL=\\\"https://oops.redisdesktop.com/crash-report\\\"')" > Makefile.Release2
 nmake -f Makefile.Release2
 ```
 
@@ -93,7 +96,7 @@ rmdir /S /Q .\QtGraphicalEffects
 del /Q  .\imageformats\qtiff.dll
 del /Q  .\imageformats\qwebp.dll
 cd D:\redisdesktopmanager
-call "C:\\Program Files (x86)\\NSIS\\makensis.exe" /V1 /DVERSION=0.9.4.1055  ./build/windows/installer/installer.nsi
+call "C:\\Program Files (x86)\\NSIS\\makensis.exe" /V1 /DVERSION=%VERSION% ./build/windows/installer/installer.nsi
 ```
 
 打包后的文件：`D:\redisdesktopmanager\build\windows\installer\redis-desktop-manager-0.9.4.1055.exe`
