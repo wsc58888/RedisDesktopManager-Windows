@@ -4,7 +4,9 @@
 
 但是网络上关于 Redis Desktop Manager 的编译教程都是 Linux 下的，没有任何参考价值。而官方文档提供的步骤只有寥寥几个字，没有任何可操作性。本人摸索了几个小时，终于摸清编译打包的完整流程。
 
-如果下面的教程对你有所帮助，你也可以选择打赏。
+更新：觉得麻烦的，可以直接下载本人编译打包好的[安装包](https://github.com/necan/RedisDesktopManager/releases)
+
+如果安装包和编译教程对你有所帮助，你可以选择打赏请我喝一杯咖啡。
 
 <div align="center"><img width="300" height="300" src="images/alipay.png"><img width="300" height="300" src="images/wechatpay.png"></div>
 
