@@ -7,8 +7,7 @@
 更新：觉得麻烦的，可以直接下载本人编译打包好的[安装包](https://github.com/necan/RedisDesktopManager-Windows/releases)
 
 如果安装包和编译教程对你有所帮助，你可以选择打赏请我喝一杯咖啡。
-
-<div align="center"><img width="300" height="300" src="images/alipay.png"><img width="300" height="300" src="images/wechatpay.png"></div>
+ 
 
 ## 编译过程
 
@@ -102,3 +101,4 @@ call "C:\\Program Files (x86)\\NSIS\\makensis.exe" /V1 /DVERSION=%VERSION% ./bui
 ```
 
 打包后的文件：`D:\redisdesktopmanager\build\windows\installer\redis-desktop-manager-0.9.4.1055.exe`
+
